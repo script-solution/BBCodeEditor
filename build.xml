@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BBCodeEditor" default="deploy" basedir=".">
+	<property name="build" value="build"/>
+	<property name="keystoreFileName" location="keystore.ks"/>
+	
+	<property name="aliasName" value="Your Name"/>
+	<property name="password" value="Your Password"/>
+	<property name="fullName" value="Your Name"/>
+	<property name="city" value="Your City"/>
+	<property name="state" value="Your State"/>
+	<property name="country" value="DE"/>
+
+	<target name="clean">
+		<delete dir="build"/>
+	</target>
+	
+	<target name="compile">
+		<mkdir dir="build"/>
+		<javac srcdir="bbcodeeditor" destdir="build"/>
+	</target>
+
+	<target name="deploy" depends="compile">
+		<jar
+			destfile="${build}/editorcontrol.jar"
+			basedir="${build}"
+			includes="bbcodeeditor/control/**">
+		</jar>
+		<jar
+			destfile="${build}/bbcodeeditor.jar"
+			basedir="${build}"
+			includes="bbcodeeditor/gui/**">
+            <manifest>
+                <attribute name="Class-Path" value="./editorcontrol.jar"/>
+            </manifest>
+		</jar>
+		<jar
+			destfile="${build}/bbcodeeditor-standalone.jar"
+			basedir="${build}"
+			includes="bbcodeeditor/gui/**">
+            <manifest>
+                <attribute name="Main-Class" value="bbcodeeditor.gui.BBCodeEditorStandalone"/>
+                <attribute name="Class-Path" value="./editorcontrol.jar"/>
+            </manifest>
+		</jar>
+	</target>
+	
+	<target name="sign" depends="deploy">
+		<delete file="keystore.ks" failonerror="false"/>
+		<genkey alias="${aliasName}" storepass="${password}" keystore="keystore.ks">
+			<dname>
+				<param name="CN" value="${fullName}"/>
+				<param name="L" value="${city}"/>
+				<param name="ST" value="${state}"/>
+				<param name="C" value="${country}"/>   
+			</dname>
+		</genkey>
+		<signjar jar="${build}/editorcontrol.jar" alias="${aliasName}"
+				 keystore="keystore.ks" storepass="${password}"/>
+		<signjar jar="${build}/bbcodeeditor.jar" alias="${aliasName}"
+				 keystore="keystore.ks" storepass="${password}"/>
+	</target>
+
+    <target name="run" depends="sign">
+        <java jar="${build}/bbcodeeditor-standalone.jar" fork="true"/>
+    </target>
+</project>
