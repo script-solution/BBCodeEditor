@@ -4,8 +4,8 @@ BBCodeEditor
 The BBCodeEditor is a Java application and applet that allows to edit BBCode
 in a WYSIWYG way. It has been written for [Boardsolution](/ScSo/Boardsolution),
 so that the BBCode is the one that Boardsolution supports, but most things
-should be suited for other BBCode engines as well. It consists of the control
-- the heart of the project and the only really interesting part of it ;) - and
+should be suited for other BBCode engines as well. It consists of the control,
+(the heart of the project and the only really interesting part of it ;)) and
 some stuff around it like buttons, comboboxes and so on. Thus, the control is
 usable for other purposes as well.
 
